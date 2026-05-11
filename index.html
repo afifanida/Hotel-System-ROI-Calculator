@@ -7,290 +7,59 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --green: #1D9E75;
-    --green-light: #E1F5EE;
-    --green-dark: #0F6E56;
-    --red: #E24B4A;
-    --red-light: #FCEBEB;
-    --blue: #378ADD;
-    --blue-light: #E6F1FB;
-    --amber: #BA7517;
-    --amber-light: #FAEEDA;
-    --bg: #F7F6F2;
-    --surface: #FFFFFF;
-    --surface2: #F1EFE8;
-    --border: rgba(0,0,0,0.08);
-    --border-md: rgba(0,0,0,0.13);
-    --text: #1A1A18;
-    --text-secondary: #5F5E5A;
-    --text-hint: #888780;
-    --radius: 12px;
-    --radius-sm: 8px;
+    --green: #1D9E75; --green-light: #E1F5EE; --green-dark: #0F6E56;
+    --red: #E24B4A; --red-light: #FCEBEB;
+    --blue: #378ADD; --blue-light: #E6F1FB;
+    --bg: #F7F6F2; --surface: #FFFFFF; --surface2: #F1EFE8;
+    --border: rgba(0,0,0,0.08); --border-md: rgba(0,0,0,0.13);
+    --text: #1A1A18; --text-secondary: #5F5E5A; --text-hint: #888780;
+    --radius: 12px; --radius-sm: 8px;
   }
-
-  body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 2rem 1rem 4rem;
-  }
-
-  .container {
-    max-width: 820px;
-    margin: 0 auto;
-  }
-
-  /* Header */
-  .header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 2rem;
-  }
-
-  .logo-badge {
-    background: var(--green);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 6px 14px;
-    border-radius: 999px;
-    letter-spacing: 0.04em;
-  }
-
-  .header-text h1 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.2;
-  }
-
-  .header-text p {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-top: 2px;
-  }
-
-  /* Card */
-  .card {
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-hint);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 12px;
-  }
-
-  /* Package cards (display only, computed) */
-  .pkg-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
-
-  .pkg-card {
-    border: 1px solid var(--border-md);
-    border-radius: var(--radius-sm);
-    background: var(--surface2);
-    padding: 12px 10px;
-    text-align: center;
-  }
-
-  .pkg-card .pkg-name { font-size: 11px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
-  .pkg-card .pkg-publish { font-size: 11px; color: var(--text-hint); text-decoration: line-through; font-family: 'DM Mono', monospace; display: block; margin-bottom: 2px; }
-  .pkg-card .pkg-final { font-size: 16px; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--green-dark); display: block; margin-bottom: 1px; }
-  .pkg-card .pkg-period { font-size: 10px; color: var(--text-hint); }
-  .pkg-card .pkg-saving { font-size: 10px; color: var(--green); font-weight: 600; margin-top: 4px; display: block; }
-
-  .pkg-btn {
-    border: 1px solid var(--border-md);
-    border-radius: var(--radius-sm);
-    background: var(--surface2);
-    padding: 8px 6px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.15s;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 12px;
-    color: var(--text-secondary);
-  }
-  .pkg-btn:hover { border-color: var(--green); background: var(--green-light); }
-  .pkg-btn.active { border: 1.5px solid var(--green); background: var(--green-light); color: var(--green-dark); font-weight: 600; }
-
-  /* Input grid */
-  .input-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
-  }
-
-  .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .input-group label {
-    font-size: 12px;
-    color: var(--text-secondary);
-    font-weight: 500;
-  }
-
-  .input-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    border: 1px solid var(--border-md);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    overflow: hidden;
-    transition: border-color 0.15s;
-  }
-
-  .input-wrap:focus-within { border-color: var(--green); box-shadow: 0 0 0 3px rgba(29,158,117,0.12); }
-
-  .input-prefix {
-    font-size: 12px;
-    color: var(--text-hint);
-    padding: 0 10px;
-    background: var(--surface2);
-    border-right: 1px solid var(--border);
-    height: 38px;
-    display: flex;
-    align-items: center;
-    font-family: 'DM Mono', monospace;
-    white-space: nowrap;
-  }
-
-  .input-suffix {
-    font-size: 12px;
-    color: var(--text-hint);
-    padding: 0 10px;
-    background: var(--surface2);
-    border-left: 1px solid var(--border);
-    height: 38px;
-    display: flex;
-    align-items: center;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .input-wrap input {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 14px;
-    font-weight: 600;
-    font-family: 'DM Mono', monospace;
-    color: var(--text);
-    background: transparent;
-    padding: 0 10px;
-    height: 38px;
-    width: 0;
-  }
-
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem 1rem 4rem; }
+  .container { max-width: 760px; margin: 0 auto; }
+  .header { display: flex; align-items: center; gap: 14px; margin-bottom: 2rem; }
+  .logo-badge { background: var(--green); color: #fff; font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 999px; letter-spacing: 0.04em; white-space: nowrap; }
+  .header-text h1 { font-size: 20px; font-weight: 700; line-height: 1.2; }
+  .header-text p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+  .card { background: var(--surface); border: 0.5px solid var(--border-md); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; }
+  .section-label { font-size: 11px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+  .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .input-group { display: flex; flex-direction: column; gap: 5px; }
+  .input-group label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
   .input-hint { font-size: 10px; color: var(--text-hint); }
-
-  /* Divider */
+  .input-wrap { display: flex; align-items: center; border: 1px solid var(--border-md); border-radius: var(--radius-sm); background: var(--surface); overflow: hidden; transition: border-color 0.15s; }
+  .input-wrap:focus-within { border-color: var(--green); box-shadow: 0 0 0 3px rgba(29,158,117,0.12); }
+  .input-prefix { font-size: 12px; color: var(--text-hint); padding: 0 10px; background: var(--surface2); border-right: 1px solid var(--border); height: 40px; display: flex; align-items: center; font-family: 'DM Mono', monospace; white-space: nowrap; }
+  .input-suffix { font-size: 12px; color: var(--text-hint); padding: 0 10px; background: var(--surface2); border-left: 1px solid var(--border); height: 40px; display: flex; align-items: center; font-family: 'DM Mono', monospace; }
+  .input-wrap input { flex: 1; border: none; outline: none; font-size: 15px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--text); background: transparent; padding: 0 12px; height: 40px; width: 0; }
   .divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
-
-  /* Metric grid */
-  .metric-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 8px;
-  }
-
-  .metric {
-    background: var(--surface2);
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-  }
-
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+  .metric { background: var(--surface2); border-radius: var(--radius-sm); padding: 12px 14px; }
   .metric .m-label { font-size: 10px; color: var(--text-hint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
   .metric .m-val { font-size: 16px; font-weight: 700; color: var(--text); font-family: 'DM Mono', monospace; }
   .metric.danger .m-val { color: var(--red); }
   .metric.success .m-val { color: var(--green-dark); }
-
-  /* Bar chart */
-  .bar-section { margin: 4px 0; }
-
-  .bar-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
   .bar-label-col { font-size: 12px; color: var(--text-secondary); width: 140px; flex-shrink: 0; font-weight: 500; }
-
-  .bar-track {
-    flex: 1;
-    height: 12px;
-    background: var(--surface2);
-    border-radius: 6px;
-    overflow: hidden;
-  }
-
-  .bar-fill {
-    height: 100%;
-    border-radius: 6px;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    min-width: 2px;
-  }
-
+  .bar-track { flex: 1; height: 12px; background: var(--surface2); border-radius: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; transition: width 0.4s cubic-bezier(0.4,0,0.2,1); min-width: 2px; }
   .bar-rev { background: var(--blue); }
   .bar-ota { background: var(--red); }
   .bar-sys { background: var(--green); }
-
   .bar-val { font-size: 12px; font-weight: 600; width: 90px; text-align: right; font-family: 'DM Mono', monospace; color: var(--text); }
-
-  /* Insights */
-  .insights-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 10px;
-    margin-top: 1.25rem;
-  }
-
-  .insight-card {
-    border-radius: var(--radius-sm);
-    padding: 14px 16px;
-    border: 1px solid transparent;
-  }
-
+  .insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 1.25rem; }
+  .insight-card { border-radius: var(--radius-sm); padding: 14px 16px; border: 1px solid transparent; }
   .insight-card.green { background: var(--green-light); border-color: rgba(29,158,117,0.2); }
-  .insight-card.red { background: var(--red-light); border-color: rgba(226,75,74,0.2); }
-  .insight-card.blue { background: var(--blue-light); border-color: rgba(55,138,221,0.2); }
-
+  .insight-card.red   { background: var(--red-light);   border-color: rgba(226,75,74,0.2); }
+  .insight-card.blue  { background: var(--blue-light);  border-color: rgba(55,138,221,0.2); }
   .insight-card .i-val { font-size: 28px; font-weight: 700; font-family: 'DM Mono', monospace; line-height: 1; margin-bottom: 4px; }
   .insight-card.green .i-val { color: var(--green-dark); }
-  .insight-card.red .i-val { color: var(--red); }
-  .insight-card.blue .i-val { color: var(--blue); }
+  .insight-card.red   .i-val { color: var(--red); }
+  .insight-card.blue  .i-val { color: var(--blue); }
   .insight-card .i-label { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
-
-  /* Footer */
-  .footer {
-    text-align: center;
-    margin-top: 2rem;
-    font-size: 11px;
-    color: var(--text-hint);
-  }
-
-  @media (max-width: 500px) {
-    .pkg-grid { grid-template-columns: 1fr; }
-    .header { flex-direction: column; align-items: flex-start; }
-  }
+  .footer { text-align: center; margin-top: 2rem; font-size: 11px; color: var(--text-hint); }
+  @media (max-width: 500px) { .header { flex-direction: column; align-items: flex-start; } }
 </style>
 </head>
 <body>
@@ -304,90 +73,28 @@
     </div>
   </div>
 
-  <!-- Pricing builder -->
   <div class="card">
-    <p class="section-label">Harga sistem</p>
-    <div class="input-grid" style="margin-bottom:14px;">
+    <p class="section-label">Biaya sistem</p>
+    <div class="input-grid">
       <div class="input-group">
-        <label>Publish rate / bulan (USD)</label>
+        <label>Biaya sistem / bulan (USD)</label>
         <div class="input-wrap">
           <span class="input-prefix">$</span>
-          <input type="number" id="publish-rate" value="60" min="0" step="0.01" oninput="calcPkg()">
+          <input type="number" id="cost-usd" value="52" min="0" step="0.01" oninput="calc()">
         </div>
-        <span class="input-hint">Harga sebelum diskon</span>
-      </div>
-      <div class="input-group">
-        <label>After discount / bulan (USD)</label>
-        <div class="input-wrap">
-          <span class="input-prefix">$</span>
-          <input type="number" id="monthly-after" value="52" min="0" step="0.01" oninput="calcPkg()">
-        </div>
-        <span class="input-hint">Harga yang ditawarkan ke client</span>
-      </div>
-      <div class="input-group">
-        <label>Diskon tambahan quarterly (%)</label>
-        <div class="input-wrap">
-          <input type="number" id="disc-q" value="0" min="0" max="100" step="1" oninput="calcPkg()" style="padding-left:14px;">
-          <span class="input-suffix">%</span>
-        </div>
-      </div>
-      <div class="input-group">
-        <label>Diskon tambahan half yearly (%)</label>
-        <div class="input-wrap">
-          <input type="number" id="disc-h" value="10" min="0" max="100" step="1" oninput="calcPkg()" style="padding-left:14px;">
-          <span class="input-suffix">%</span>
-        </div>
-      </div>
-      <div class="input-group">
-        <label>Diskon tambahan yearly (%)</label>
-        <div class="input-wrap">
-          <input type="number" id="disc-y" value="20" min="0" max="100" step="1" oninput="calcPkg()" style="padding-left:14px;">
-          <span class="input-suffix">%</span>
-        </div>
+        <span class="input-hint">Masukkan harga yang disepakati dengan client</span>
       </div>
       <div class="input-group">
         <label>Kurs USD → IDR</label>
         <div class="input-wrap">
           <span class="input-prefix">Rp</span>
-          <input type="number" id="usd-rate" value="16380" min="1" oninput="calcPkg()">
+          <input type="number" id="usd-rate" value="16380" min="1" oninput="calc()">
         </div>
+        <span class="input-hint">Sesuaikan kurs hari ini</span>
       </div>
-    </div>
-
-    <p class="section-label" style="margin-bottom:10px;">Paket yang ditawarkan (otomatis)</p>
-    <div class="pkg-grid">
-      <div class="pkg-card">
-        <span class="pkg-name">Quarterly</span>
-        <span class="pkg-publish" id="pkg-q-publish">$180 / 3 bln</span>
-        <span class="pkg-final" id="pkg-q-final">$156</span>
-        <span class="pkg-period">per 3 bulan</span>
-        <span class="pkg-saving" id="pkg-q-saving">hemat 0%</span>
-      </div>
-      <div class="pkg-card" style="border-color: var(--green); background: var(--green-light);">
-        <span class="pkg-name" style="color: var(--green-dark);">Half Yearly ★</span>
-        <span class="pkg-publish" id="pkg-h-publish">$360 / 6 bln</span>
-        <span class="pkg-final" id="pkg-h-final">$280.80</span>
-        <span class="pkg-period">per 6 bulan</span>
-        <span class="pkg-saving" id="pkg-h-saving">hemat 10%</span>
-      </div>
-      <div class="pkg-card">
-        <span class="pkg-name">Yearly</span>
-        <span class="pkg-publish" id="pkg-y-publish">$720 / thn</span>
-        <span class="pkg-final" id="pkg-y-final">$499.20</span>
-        <span class="pkg-period">per tahun</span>
-        <span class="pkg-saving" id="pkg-y-saving">hemat 20%</span>
-      </div>
-    </div>
-    <p style="font-size:11px; color:var(--text-hint); margin-top:10px;">* Klik paket untuk digunakan dalam perhitungan ROI di bawah</p>
-
-    <div class="pkg-grid" style="margin-top:8px; gap:8px;">
-      <button class="pkg-btn" id="sel-q" onclick="selectPkg('q', this)">Gunakan Quarterly</button>
-      <button class="pkg-btn active" id="sel-h" onclick="selectPkg('h', this)">Gunakan Half Yearly</button>
-      <button class="pkg-btn" id="sel-y" onclick="selectPkg('y', this)">Gunakan Yearly</button>
     </div>
   </div>
 
-  <!-- Hotel data -->
   <div class="card">
     <p class="section-label">Data hotel</p>
     <div class="input-grid">
@@ -429,12 +136,11 @@
     </div>
   </div>
 
-  <!-- Results -->
   <div class="card">
     <p class="section-label">Ringkasan revenue bulanan</p>
     <div class="metric-grid">
       <div class="metric">
-        <p class="m-label">Online gross</p>
+        <p class="m-label">Online income</p>
         <p class="m-val" id="m-online-gross">—</p>
       </div>
       <div class="metric danger">
@@ -458,7 +164,7 @@
     <hr class="divider">
 
     <p class="section-label">Perbandingan visual</p>
-    <div class="bar-section">
+    <div style="margin: 4px 0;">
       <div class="bar-row">
         <span class="bar-label-col">Total revenue</span>
         <div class="bar-track"><div class="bar-fill bar-rev" style="width:100%"></div></div>
@@ -495,70 +201,12 @@
   <div class="footer">Yanolja Hospitality Technology Solutions &nbsp;·&nbsp; Confidential &nbsp;·&nbsp; For internal presentation use</div>
 
 </div>
-
 <script>
-  let activePkg = 'h'; // h = half yearly by default
-
-  function fmtUSD(n) { return '$' + n.toFixed(2); }
-
-  function calcPkg() {
-    const publish  = parseFloat(document.getElementById('publish-rate').value) || 0;
-    const monthly  = parseFloat(document.getElementById('monthly-after').value) || 0;
-    const discQ    = (parseFloat(document.getElementById('disc-q').value) || 0) / 100;
-    const discH    = (parseFloat(document.getElementById('disc-h').value) || 0) / 100;
-    const discY    = (parseFloat(document.getElementById('disc-y').value) || 0) / 100;
-
-    const publishQ = publish * 3;
-    const publishH = publish * 6;
-    const publishY = publish * 12;
-
-    const finalQ  = monthly * 3  * (1 - discQ);
-    const finalH  = monthly * 6  * (1 - discH);
-    const finalY  = monthly * 12 * (1 - discY);
-
-    const savingQpct = publishQ > 0 ? ((publishQ - finalQ) / publishQ * 100) : 0;
-    const savingHpct = publishH > 0 ? ((publishH - finalH) / publishH * 100) : 0;
-    const savingYpct = publishY > 0 ? ((publishY - finalY) / publishY * 100) : 0;
-
-    document.getElementById('pkg-q-publish').textContent = fmtUSD(publishQ) + ' / 3 bln';
-    document.getElementById('pkg-h-publish').textContent = fmtUSD(publishH) + ' / 6 bln';
-    document.getElementById('pkg-y-publish').textContent = fmtUSD(publishY) + ' / thn';
-
-    document.getElementById('pkg-q-final').textContent = fmtUSD(finalQ);
-    document.getElementById('pkg-h-final').textContent = fmtUSD(finalH);
-    document.getElementById('pkg-y-final').textContent = fmtUSD(finalY);
-
-    document.getElementById('pkg-q-saving').textContent = 'hemat ' + savingQpct.toFixed(0) + '%';
-    document.getElementById('pkg-h-saving').textContent = 'hemat ' + savingHpct.toFixed(0) + '%';
-    document.getElementById('pkg-y-saving').textContent = 'hemat ' + savingYpct.toFixed(0) + '%';
-
-    calc();
-  }
-
-  function selectPkg(key, el) {
-    activePkg = key;
-    document.querySelectorAll('.pkg-btn').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
-    calc();
-  }
-
-  function getActiveCostPerMonth() {
-    const monthly = parseFloat(document.getElementById('monthly-after').value) || 0;
-    const discQ   = (parseFloat(document.getElementById('disc-q').value) || 0) / 100;
-    const discH   = (parseFloat(document.getElementById('disc-h').value) || 0) / 100;
-    const discY   = (parseFloat(document.getElementById('disc-y').value) || 0) / 100;
-
-    if (activePkg === 'q') return monthly * (1 - discQ);
-    if (activePkg === 'h') return monthly * (1 - discH);
-    if (activePkg === 'y') return monthly * (1 - discY);
-    return monthly;
-  }
-
   function fmt(n) {
-    if (isNaN(n) || n === null) return '—';
-    if (n >= 1e9) return 'Rp' + (n / 1e9).toFixed(2) + ' M';
-    if (n >= 1e6) return 'Rp' + (n / 1e6).toFixed(1) + ' jt';
-    if (n >= 1e3) return 'Rp' + Math.round(n / 1e3) + ' rb';
+    if (isNaN(n) || !n) return '—';
+    if (n >= 1e9) return 'Rp' + (n/1e9).toFixed(2) + ' M';
+    if (n >= 1e6) return 'Rp' + (n/1e6).toFixed(1) + ' jt';
+    if (n >= 1e3) return 'Rp' + Math.round(n/1e3) + ' rb';
     return 'Rp' + Math.round(n);
   }
 
@@ -569,7 +217,7 @@
     const occOffline = (parseFloat(document.getElementById('occ-offline').value) || 0) / 100;
     const otaPct     = (parseFloat(document.getElementById('ota-pct').value) || 0) / 100;
     const usdRate    = parseFloat(document.getElementById('usd-rate').value) || 16380;
-    const costUsd    = getActiveCostPerMonth();
+    const costUsd    = parseFloat(document.getElementById('cost-usd').value) || 0;
     const sysPerMonth = costUsd * usdRate;
 
     const onlineGross = rooms * occOnline * 30 * rate;
@@ -578,22 +226,20 @@
     const offline     = rooms * occOffline * 30 * rate;
     const totalGross  = onlineGross + offline;
     const totalNet    = onlineNet + offline;
-
-    const sysPct = totalGross > 0 ? (sysPerMonth / totalGross * 100) : 0;
-    const otaX   = sysPerMonth > 0 ? Math.round(otaCut / sysPerMonth) : 0;
+    const sysPct      = totalGross > 0 ? (sysPerMonth / totalGross * 100) : 0;
+    const otaX        = sysPerMonth > 0 ? Math.round(otaCut / sysPerMonth) : 0;
 
     document.getElementById('m-online-gross').textContent = fmt(onlineGross);
     document.getElementById('m-ota-cut').textContent      = fmt(otaCut);
     document.getElementById('m-online-net').textContent   = fmt(onlineNet);
     document.getElementById('m-offline').textContent      = fmt(offline);
     document.getElementById('m-total').textContent        = fmt(totalNet);
+    document.getElementById('bv-rev').textContent         = fmt(totalGross);
+    document.getElementById('bv-ota').textContent         = fmt(otaCut);
+    document.getElementById('bv-sys').textContent         = fmt(Math.round(sysPerMonth));
 
-    document.getElementById('bv-rev').textContent = fmt(totalGross);
-    document.getElementById('bv-ota').textContent = fmt(otaCut);
-    document.getElementById('bv-sys').textContent = fmt(Math.round(sysPerMonth));
-
-    const otaWidth = totalGross > 0 ? Math.min(100, otaCut / totalGross * 100) : 0;
-    const sysWidth = totalGross > 0 ? Math.max(0.5, Math.min(100, sysPerMonth / totalGross * 100)) : 0.5;
+    const otaWidth = totalGross > 0 ? Math.min(100, otaCut/totalGross*100) : 0;
+    const sysWidth = totalGross > 0 ? Math.max(0.5, Math.min(100, sysPerMonth/totalGross*100)) : 0.5;
     document.getElementById('bar-ota').style.width = otaWidth + '%';
     document.getElementById('bar-sys').style.width = sysWidth + '%';
 
@@ -602,12 +248,7 @@
     document.getElementById('ins-saved').textContent = fmt(otaCut);
   }
 
-  // add pkg-btn style for selector buttons
-  document.querySelectorAll('.pkg-btn').forEach(btn => {
-    btn.style.cssText += 'border:1px solid var(--border-md);border-radius:var(--radius-sm);background:var(--surface2);padding:8px 6px;cursor:pointer;text-align:center;font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:var(--text-secondary);transition:all .15s;';
-  });
-
-  calcPkg();
+  calc();
 </script>
 </body>
 </html>

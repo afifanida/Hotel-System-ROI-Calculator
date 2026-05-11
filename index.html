@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROI Calculator — Yanolja Hotel System</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #1D9E75;
+    --green-light: #E1F5EE;
+    --green-dark: #0F6E56;
+    --red: #E24B4A;
+    --red-light: #FCEBEB;
+    --blue: #378ADD;
+    --blue-light: #E6F1FB;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --surface2: #F1EFE8;
+    --border: rgba(0,0,0,0.08);
+    --border-md: rgba(0,0,0,0.13);
+    --text: #1A1A18;
+    --text-secondary: #5F5E5A;
+    --text-hint: #888780;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 2rem;
+  }
+
+  .logo-badge {
+    background: var(--green);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+
+  .header-text h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .header-text p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-hint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  /* Package selector */
+  .pkg-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 0;
+  }
+
+  .pkg-btn {
+    border: 1px solid var(--border-md);
+    border-radius: var(--radius-sm);
+    background: var(--surface2);
+    padding: 10px 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text-secondary);
+  }
+
+  .pkg-btn:hover { border-color: var(--green); background: var(--green-light); }
+
+  .pkg-btn.active {
+    border: 1.5px solid var(--green);
+    background: var(--green-light);
+    color: var(--green-dark);
+  }
+
+  .pkg-btn .pkg-name { font-size: 12px; font-weight: 600; display: block; margin-bottom: 2px; }
+  .pkg-btn .pkg-price { font-size: 13px; font-weight: 700; font-family: 'DM Mono', monospace; }
+  .pkg-btn .pkg-period { font-size: 10px; color: var(--text-hint); }
+
+  /* Input grid */
+  .input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .input-group label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid var(--border-md);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+
+  .input-wrap:focus-within { border-color: var(--green); box-shadow: 0 0 0 3px rgba(29,158,117,0.12); }
+
+  .input-prefix {
+    font-size: 12px;
+    color: var(--text-hint);
+    padding: 0 10px;
+    background: var(--surface2);
+    border-right: 1px solid var(--border);
+    height: 38px;
+    display: flex;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+  }
+
+  .input-suffix {
+    font-size: 12px;
+    color: var(--text-hint);
+    padding: 0 10px;
+    background: var(--surface2);
+    border-left: 1px solid var(--border);
+    height: 38px;
+    display: flex;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .input-wrap input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    color: var(--text);
+    background: transparent;
+    padding: 0 10px;
+    height: 38px;
+    width: 0;
+  }
+
+  .input-hint { font-size: 10px; color: var(--text-hint); }
+
+  /* Divider */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+  /* Metric grid */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 8px;
+  }
+
+  .metric {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+  }
+
+  .metric .m-label { font-size: 10px; color: var(--text-hint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .metric .m-val { font-size: 16px; font-weight: 700; color: var(--text); font-family: 'DM Mono', monospace; }
+  .metric.danger .m-val { color: var(--red); }
+  .metric.success .m-val { color: var(--green-dark); }
+
+  /* Bar chart */
+  .bar-section { margin: 4px 0; }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .bar-label-col { font-size: 12px; color: var(--text-secondary); width: 140px; flex-shrink: 0; font-weight: 500; }
+
+  .bar-track {
+    flex: 1;
+    height: 12px;
+    background: var(--surface2);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 2px;
+  }
+
+  .bar-rev { background: var(--blue); }
+  .bar-ota { background: var(--red); }
+  .bar-sys { background: var(--green); }
+
+  .bar-val { font-size: 12px; font-weight: 600; width: 90px; text-align: right; font-family: 'DM Mono', monospace; color: var(--text); }
+
+  /* Insights */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-top: 1.25rem;
+  }
+
+  .insight-card {
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    border: 1px solid transparent;
+  }
+
+  .insight-card.green { background: var(--green-light); border-color: rgba(29,158,117,0.2); }
+  .insight-card.red { background: var(--red-light); border-color: rgba(226,75,74,0.2); }
+  .insight-card.blue { background: var(--blue-light); border-color: rgba(55,138,221,0.2); }
+
+  .insight-card .i-val { font-size: 28px; font-weight: 700; font-family: 'DM Mono', monospace; line-height: 1; margin-bottom: 4px; }
+  .insight-card.green .i-val { color: var(--green-dark); }
+  .insight-card.red .i-val { color: var(--red); }
+  .insight-card.blue .i-val { color: var(--blue); }
+  .insight-card .i-label { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 11px;
+    color: var(--text-hint);
+  }
+
+  @media (max-width: 500px) {
+    .pkg-grid { grid-template-columns: 1fr; }
+    .header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <span class="logo-badge">YANOLJA</span>
+    <div class="header-text">
+      <h1>Hotel System ROI Calculator</h1>
+      <p>Bandingkan biaya sistem dengan potensi revenue hotel Anda</p>
+    </div>
+  </div>
+
+  <!-- Package -->
+  <div class="card">
+    <p class="section-label">Pilih paket sistem</p>
+    <div class="pkg-grid">
+      <button class="pkg-btn" onclick="setPkg('quarterly', this)">
+        <span class="pkg-name">Quarterly</span>
+        <span class="pkg-price">$172.25</span>
+        <span class="pkg-period">per 3 bulan</span>
+      </button>
+      <button class="pkg-btn active" onclick="setPkg('halfyearly', this)">
+        <span class="pkg-name">Half Yearly</span>
+        <span class="pkg-price">$312</span>
+        <span class="pkg-period">per 6 bulan</span>
+      </button>
+      <button class="pkg-btn" onclick="setPkg('yearly', this)">
+        <span class="pkg-name">Yearly</span>
+        <span class="pkg-price">$720</span>
+        <span class="pkg-period">per tahun</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Manual cost override -->
+  <div class="card">
+    <p class="section-label">Override biaya sistem (opsional)</p>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Biaya sistem / bulan</label>
+        <div class="input-wrap">
+          <span class="input-prefix">USD $</span>
+          <input type="number" id="cost-usd" value="52.00" min="0" step="0.01" oninput="onCostChange()">
+        </div>
+        <span class="input-hint">Edit untuk override paket di atas</span>
+      </div>
+      <div class="input-group">
+        <label>Kurs USD → IDR</label>
+        <div class="input-wrap">
+          <span class="input-prefix">Rp</span>
+          <input type="number" id="usd-rate" value="16380" min="1" oninput="calc()">
+        </div>
+        <span class="input-hint">Sesuaikan kurs hari ini</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hotel data -->
+  <div class="card">
+    <p class="section-label">Data hotel</p>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Jumlah kamar</label>
+        <div class="input-wrap">
+          <input type="number" id="rooms" value="100" min="1" oninput="calc()" style="padding-left:14px;">
+          <span class="input-suffix">kamar</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Average Room Rate / malam</label>
+        <div class="input-wrap">
+          <span class="input-prefix">Rp</span>
+          <input type="number" id="rate" value="350000" min="0" oninput="calc()">
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Occupancy online</label>
+        <div class="input-wrap">
+          <input type="number" id="occ-online" value="30" min="0" max="100" oninput="calc()" style="padding-left:14px;">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Occupancy offline</label>
+        <div class="input-wrap">
+          <input type="number" id="occ-offline" value="30" min="0" max="100" oninput="calc()" style="padding-left:14px;">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Komisi OTA</label>
+        <div class="input-wrap">
+          <input type="number" id="ota-pct" value="20" min="0" max="100" oninput="calc()" style="padding-left:14px;">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="card">
+    <p class="section-label">Ringkasan revenue bulanan</p>
+    <div class="metric-grid">
+      <div class="metric">
+        <p class="m-label">Online gross</p>
+        <p class="m-val" id="m-online-gross">—</p>
+      </div>
+      <div class="metric danger">
+        <p class="m-label">Komisi OTA</p>
+        <p class="m-val" id="m-ota-cut">—</p>
+      </div>
+      <div class="metric">
+        <p class="m-label">Online setelah komisi</p>
+        <p class="m-val" id="m-online-net">—</p>
+      </div>
+      <div class="metric">
+        <p class="m-label">Offline income</p>
+        <p class="m-val" id="m-offline">—</p>
+      </div>
+      <div class="metric success">
+        <p class="m-label">Total revenue / bulan</p>
+        <p class="m-val" id="m-total">—</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <p class="section-label">Perbandingan visual</p>
+    <div class="bar-section">
+      <div class="bar-row">
+        <span class="bar-label-col">Total revenue</span>
+        <div class="bar-track"><div class="bar-fill bar-rev" style="width:100%"></div></div>
+        <span class="bar-val" id="bv-rev">—</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label-col">Komisi OTA</span>
+        <div class="bar-track"><div class="bar-fill bar-ota" id="bar-ota" style="width:10%"></div></div>
+        <span class="bar-val" id="bv-ota">—</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label-col">Biaya sistem / bln</span>
+        <div class="bar-track"><div class="bar-fill bar-sys" id="bar-sys" style="width:0.5%"></div></div>
+        <span class="bar-val" id="bv-sys">—</span>
+      </div>
+    </div>
+
+    <div class="insights-grid">
+      <div class="insight-card green">
+        <p class="i-val" id="ins-pct">—</p>
+        <p class="i-label">biaya sistem dari total revenue bulanan</p>
+      </div>
+      <div class="insight-card red">
+        <p class="i-val" id="ins-ota-x">—</p>
+        <p class="i-label">lebih besar komisi OTA vs biaya sistem</p>
+      </div>
+      <div class="insight-card blue">
+        <p class="i-val" id="ins-saved">—</p>
+        <p class="i-label">potensi penghematan / bulan jika beralih ke direct booking</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Yanolja Hospitality Technology Solutions &nbsp;·&nbsp; Confidential &nbsp;·&nbsp; For internal presentation use</div>
+
+</div>
+
+<script>
+  const PKGS = {
+    quarterly:  { usdPerMonth: 172.25 / 3 },
+    halfyearly: { usdPerMonth: 312 / 6 },
+    yearly:     { usdPerMonth: 720 / 12 }
+  };
+
+  let currentPkg = 'halfyearly';
+
+  function setPkg(key, el) {
+    currentPkg = key;
+    document.querySelectorAll('.pkg-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('cost-usd').value = PKGS[key].usdPerMonth.toFixed(2);
+    calc();
+  }
+
+  function onCostChange() {
+    document.querySelectorAll('.pkg-btn').forEach(b => b.classList.remove('active'));
+    calc();
+  }
+
+  function fmt(n) {
+    if (isNaN(n) || n === null) return '—';
+    if (n >= 1e9) return 'Rp' + (n / 1e9).toFixed(2) + ' M';
+    if (n >= 1e6) return 'Rp' + (n / 1e6).toFixed(1) + ' jt';
+    if (n >= 1e3) return 'Rp' + Math.round(n / 1e3) + ' rb';
+    return 'Rp' + Math.round(n);
+  }
+
+  function calc() {
+    const rooms      = parseFloat(document.getElementById('rooms').value) || 0;
+    const rate       = parseFloat(document.getElementById('rate').value) || 0;
+    const occOnline  = (parseFloat(document.getElementById('occ-online').value) || 0) / 100;
+    const occOffline = (parseFloat(document.getElementById('occ-offline').value) || 0) / 100;
+    const otaPct     = (parseFloat(document.getElementById('ota-pct').value) || 0) / 100;
+    const usdRate    = parseFloat(document.getElementById('usd-rate').value) || 16380;
+    const costUsd    = parseFloat(document.getElementById('cost-usd').value) || 0;
+    const sysPerMonth = costUsd * usdRate;
+
+    const onlineGross = rooms * occOnline * 30 * rate;
+    const otaCut      = onlineGross * otaPct;
+    const onlineNet   = onlineGross - otaCut;
+    const offline     = rooms * occOffline * 30 * rate;
+    const totalGross  = onlineGross + offline;
+    const totalNet    = onlineNet + offline;
+
+    const sysPct = totalGross > 0 ? (sysPerMonth / totalGross * 100) : 0;
+    const otaX   = sysPerMonth > 0 ? Math.round(otaCut / sysPerMonth) : 0;
+
+    document.getElementById('m-online-gross').textContent = fmt(onlineGross);
+    document.getElementById('m-ota-cut').textContent      = fmt(otaCut);
+    document.getElementById('m-online-net').textContent   = fmt(onlineNet);
+    document.getElementById('m-offline').textContent      = fmt(offline);
+    document.getElementById('m-total').textContent        = fmt(totalNet);
+
+    document.getElementById('bv-rev').textContent = fmt(totalGross);
+    document.getElementById('bv-ota').textContent = fmt(otaCut);
+    document.getElementById('bv-sys').textContent = fmt(Math.round(sysPerMonth));
+
+    const otaWidth = totalGross > 0 ? Math.min(100, otaCut / totalGross * 100) : 0;
+    const sysWidth = totalGross > 0 ? Math.max(0.5, Math.min(100, sysPerMonth / totalGross * 100)) : 0.5;
+    document.getElementById('bar-ota').style.width = otaWidth + '%';
+    document.getElementById('bar-sys').style.width = sysWidth + '%';
+
+    document.getElementById('ins-pct').textContent   = sysPct.toFixed(2) + '%';
+    document.getElementById('ins-ota-x').textContent = otaX + 'x';
+    document.getElementById('ins-saved').textContent = fmt(otaCut);
+  }
+
+  calc();
+</script>
+</body>
+</html>

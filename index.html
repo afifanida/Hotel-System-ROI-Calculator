@@ -92,37 +92,41 @@
     margin-bottom: 12px;
   }
 
-  /* Package selector */
+  /* Package cards (display only, computed) */
   .pkg-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-    margin-bottom: 0;
   }
+
+  .pkg-card {
+    border: 1px solid var(--border-md);
+    border-radius: var(--radius-sm);
+    background: var(--surface2);
+    padding: 12px 10px;
+    text-align: center;
+  }
+
+  .pkg-card .pkg-name { font-size: 11px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
+  .pkg-card .pkg-publish { font-size: 11px; color: var(--text-hint); text-decoration: line-through; font-family: 'DM Mono', monospace; display: block; margin-bottom: 2px; }
+  .pkg-card .pkg-final { font-size: 16px; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--green-dark); display: block; margin-bottom: 1px; }
+  .pkg-card .pkg-period { font-size: 10px; color: var(--text-hint); }
+  .pkg-card .pkg-saving { font-size: 10px; color: var(--green); font-weight: 600; margin-top: 4px; display: block; }
 
   .pkg-btn {
     border: 1px solid var(--border-md);
     border-radius: var(--radius-sm);
     background: var(--surface2);
-    padding: 10px 8px;
+    padding: 8px 6px;
     cursor: pointer;
     text-align: center;
     transition: all 0.15s;
     font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
     color: var(--text-secondary);
   }
-
   .pkg-btn:hover { border-color: var(--green); background: var(--green-light); }
-
-  .pkg-btn.active {
-    border: 1.5px solid var(--green);
-    background: var(--green-light);
-    color: var(--green-dark);
-  }
-
-  .pkg-btn .pkg-name { font-size: 12px; font-weight: 600; display: block; margin-bottom: 2px; }
-  .pkg-btn .pkg-price { font-size: 13px; font-weight: 700; font-family: 'DM Mono', monospace; }
-  .pkg-btn .pkg-period { font-size: 10px; color: var(--text-hint); }
+  .pkg-btn.active { border: 1.5px solid var(--green); background: var(--green-light); color: var(--green-dark); font-weight: 600; }
 
   /* Input grid */
   .input-grid {
@@ -300,48 +304,86 @@
     </div>
   </div>
 
-  <!-- Package -->
+  <!-- Pricing builder -->
   <div class="card">
-    <p class="section-label">Pilih paket sistem</p>
-    <div class="pkg-grid">
-      <button class="pkg-btn" onclick="setPkg('quarterly', this)">
-        <span class="pkg-name">Quarterly</span>
-        <span class="pkg-price">$172.25</span>
-        <span class="pkg-period">per 3 bulan</span>
-      </button>
-      <button class="pkg-btn active" onclick="setPkg('halfyearly', this)">
-        <span class="pkg-name">Half Yearly</span>
-        <span class="pkg-price">$312</span>
-        <span class="pkg-period">per 6 bulan</span>
-      </button>
-      <button class="pkg-btn" onclick="setPkg('yearly', this)">
-        <span class="pkg-name">Yearly</span>
-        <span class="pkg-price">$720</span>
-        <span class="pkg-period">per tahun</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- Manual cost override -->
-  <div class="card">
-    <p class="section-label">Override biaya sistem (opsional)</p>
-    <div class="input-grid">
+    <p class="section-label">Harga sistem</p>
+    <div class="input-grid" style="margin-bottom:14px;">
       <div class="input-group">
-        <label>Biaya sistem / bulan</label>
+        <label>Publish rate / bulan (USD)</label>
         <div class="input-wrap">
-          <span class="input-prefix">USD $</span>
-          <input type="number" id="cost-usd" value="52.00" min="0" step="0.01" oninput="onCostChange()">
+          <span class="input-prefix">$</span>
+          <input type="number" id="publish-rate" value="60" min="0" step="0.01" oninput="calcPkg()">
         </div>
-        <span class="input-hint">Edit untuk override paket di atas</span>
+        <span class="input-hint">Harga sebelum diskon</span>
+      </div>
+      <div class="input-group">
+        <label>After discount / bulan (USD)</label>
+        <div class="input-wrap">
+          <span class="input-prefix">$</span>
+          <input type="number" id="monthly-after" value="52" min="0" step="0.01" oninput="calcPkg()">
+        </div>
+        <span class="input-hint">Harga yang ditawarkan ke client</span>
+      </div>
+      <div class="input-group">
+        <label>Diskon tambahan quarterly (%)</label>
+        <div class="input-wrap">
+          <input type="number" id="disc-q" value="0" min="0" max="100" step="1" oninput="calcPkg()" style="padding-left:14px;">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Diskon tambahan half yearly (%)</label>
+        <div class="input-wrap">
+          <input type="number" id="disc-h" value="10" min="0" max="100" step="1" oninput="calcPkg()" style="padding-left:14px;">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Diskon tambahan yearly (%)</label>
+        <div class="input-wrap">
+          <input type="number" id="disc-y" value="20" min="0" max="100" step="1" oninput="calcPkg()" style="padding-left:14px;">
+          <span class="input-suffix">%</span>
+        </div>
       </div>
       <div class="input-group">
         <label>Kurs USD → IDR</label>
         <div class="input-wrap">
           <span class="input-prefix">Rp</span>
-          <input type="number" id="usd-rate" value="16380" min="1" oninput="calc()">
+          <input type="number" id="usd-rate" value="16380" min="1" oninput="calcPkg()">
         </div>
-        <span class="input-hint">Sesuaikan kurs hari ini</span>
       </div>
+    </div>
+
+    <p class="section-label" style="margin-bottom:10px;">Paket yang ditawarkan (otomatis)</p>
+    <div class="pkg-grid">
+      <div class="pkg-card">
+        <span class="pkg-name">Quarterly</span>
+        <span class="pkg-publish" id="pkg-q-publish">$180 / 3 bln</span>
+        <span class="pkg-final" id="pkg-q-final">$156</span>
+        <span class="pkg-period">per 3 bulan</span>
+        <span class="pkg-saving" id="pkg-q-saving">hemat 0%</span>
+      </div>
+      <div class="pkg-card" style="border-color: var(--green); background: var(--green-light);">
+        <span class="pkg-name" style="color: var(--green-dark);">Half Yearly ★</span>
+        <span class="pkg-publish" id="pkg-h-publish">$360 / 6 bln</span>
+        <span class="pkg-final" id="pkg-h-final">$280.80</span>
+        <span class="pkg-period">per 6 bulan</span>
+        <span class="pkg-saving" id="pkg-h-saving">hemat 10%</span>
+      </div>
+      <div class="pkg-card">
+        <span class="pkg-name">Yearly</span>
+        <span class="pkg-publish" id="pkg-y-publish">$720 / thn</span>
+        <span class="pkg-final" id="pkg-y-final">$499.20</span>
+        <span class="pkg-period">per tahun</span>
+        <span class="pkg-saving" id="pkg-y-saving">hemat 20%</span>
+      </div>
+    </div>
+    <p style="font-size:11px; color:var(--text-hint); margin-top:10px;">* Klik paket untuk digunakan dalam perhitungan ROI di bawah</p>
+
+    <div class="pkg-grid" style="margin-top:8px; gap:8px;">
+      <button class="pkg-btn" id="sel-q" onclick="selectPkg('q', this)">Gunakan Quarterly</button>
+      <button class="pkg-btn active" id="sel-h" onclick="selectPkg('h', this)">Gunakan Half Yearly</button>
+      <button class="pkg-btn" id="sel-y" onclick="selectPkg('y', this)">Gunakan Yearly</button>
     </div>
   </div>
 
@@ -455,25 +497,61 @@
 </div>
 
 <script>
-  const PKGS = {
-    quarterly:  { usdPerMonth: 172.25 / 3 },
-    halfyearly: { usdPerMonth: 312 / 6 },
-    yearly:     { usdPerMonth: 720 / 12 }
-  };
+  let activePkg = 'h'; // h = half yearly by default
 
-  let currentPkg = 'halfyearly';
+  function fmtUSD(n) { return '$' + n.toFixed(2); }
 
-  function setPkg(key, el) {
-    currentPkg = key;
-    document.querySelectorAll('.pkg-btn').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('cost-usd').value = PKGS[key].usdPerMonth.toFixed(2);
+  function calcPkg() {
+    const publish  = parseFloat(document.getElementById('publish-rate').value) || 0;
+    const monthly  = parseFloat(document.getElementById('monthly-after').value) || 0;
+    const discQ    = (parseFloat(document.getElementById('disc-q').value) || 0) / 100;
+    const discH    = (parseFloat(document.getElementById('disc-h').value) || 0) / 100;
+    const discY    = (parseFloat(document.getElementById('disc-y').value) || 0) / 100;
+
+    const publishQ = publish * 3;
+    const publishH = publish * 6;
+    const publishY = publish * 12;
+
+    const finalQ  = monthly * 3  * (1 - discQ);
+    const finalH  = monthly * 6  * (1 - discH);
+    const finalY  = monthly * 12 * (1 - discY);
+
+    const savingQpct = publishQ > 0 ? ((publishQ - finalQ) / publishQ * 100) : 0;
+    const savingHpct = publishH > 0 ? ((publishH - finalH) / publishH * 100) : 0;
+    const savingYpct = publishY > 0 ? ((publishY - finalY) / publishY * 100) : 0;
+
+    document.getElementById('pkg-q-publish').textContent = fmtUSD(publishQ) + ' / 3 bln';
+    document.getElementById('pkg-h-publish').textContent = fmtUSD(publishH) + ' / 6 bln';
+    document.getElementById('pkg-y-publish').textContent = fmtUSD(publishY) + ' / thn';
+
+    document.getElementById('pkg-q-final').textContent = fmtUSD(finalQ);
+    document.getElementById('pkg-h-final').textContent = fmtUSD(finalH);
+    document.getElementById('pkg-y-final').textContent = fmtUSD(finalY);
+
+    document.getElementById('pkg-q-saving').textContent = 'hemat ' + savingQpct.toFixed(0) + '%';
+    document.getElementById('pkg-h-saving').textContent = 'hemat ' + savingHpct.toFixed(0) + '%';
+    document.getElementById('pkg-y-saving').textContent = 'hemat ' + savingYpct.toFixed(0) + '%';
+
     calc();
   }
 
-  function onCostChange() {
+  function selectPkg(key, el) {
+    activePkg = key;
     document.querySelectorAll('.pkg-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
     calc();
+  }
+
+  function getActiveCostPerMonth() {
+    const monthly = parseFloat(document.getElementById('monthly-after').value) || 0;
+    const discQ   = (parseFloat(document.getElementById('disc-q').value) || 0) / 100;
+    const discH   = (parseFloat(document.getElementById('disc-h').value) || 0) / 100;
+    const discY   = (parseFloat(document.getElementById('disc-y').value) || 0) / 100;
+
+    if (activePkg === 'q') return monthly * (1 - discQ);
+    if (activePkg === 'h') return monthly * (1 - discH);
+    if (activePkg === 'y') return monthly * (1 - discY);
+    return monthly;
   }
 
   function fmt(n) {
@@ -491,7 +569,7 @@
     const occOffline = (parseFloat(document.getElementById('occ-offline').value) || 0) / 100;
     const otaPct     = (parseFloat(document.getElementById('ota-pct').value) || 0) / 100;
     const usdRate    = parseFloat(document.getElementById('usd-rate').value) || 16380;
-    const costUsd    = parseFloat(document.getElementById('cost-usd').value) || 0;
+    const costUsd    = getActiveCostPerMonth();
     const sysPerMonth = costUsd * usdRate;
 
     const onlineGross = rooms * occOnline * 30 * rate;
@@ -524,7 +602,12 @@
     document.getElementById('ins-saved').textContent = fmt(otaCut);
   }
 
-  calc();
+  // add pkg-btn style for selector buttons
+  document.querySelectorAll('.pkg-btn').forEach(btn => {
+    btn.style.cssText += 'border:1px solid var(--border-md);border-radius:var(--radius-sm);background:var(--surface2);padding:8px 6px;cursor:pointer;text-align:center;font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:var(--text-secondary);transition:all .15s;';
+  });
+
+  calcPkg();
 </script>
 </body>
 </html>

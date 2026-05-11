@@ -92,6 +92,14 @@
         </div>
         <span class="input-hint">Sesuaikan kurs hari ini</span>
       </div>
+      <div class="input-group">
+        <label>Total biaya sistem / bulan (IDR)</label>
+        <div class="input-wrap" style="background: var(--surface2);">
+          <span class="input-prefix">Rp</span>
+          <input type="text" id="cost-idr" readonly style="background: var(--surface2); color: var(--green-dark); cursor: default;">
+        </div>
+        <span class="input-hint">Hasil konversi otomatis</span>
+      </div>
     </div>
   </div>
 
@@ -237,6 +245,7 @@
     document.getElementById('bv-rev').textContent         = fmt(totalGross);
     document.getElementById('bv-ota').textContent         = fmt(otaCut);
     document.getElementById('bv-sys').textContent         = fmt(Math.round(sysPerMonth));
+    document.getElementById('cost-idr').value             = Math.round(sysPerMonth).toLocaleString('id-ID');
 
     const otaWidth = totalGross > 0 ? Math.min(100, otaCut/totalGross*100) : 0;
     const sysWidth = totalGross > 0 ? Math.max(0.5, Math.min(100, sysPerMonth/totalGross*100)) : 0.5;
